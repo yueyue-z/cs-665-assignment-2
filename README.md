@@ -48,7 +48,8 @@ Javadoc comments are available for all classes and methods in the project, and t
 
 The project uses design patterns to avoid duplicated code. 
 For example, the use of the abstract factory pattern in creating different types of drivers ensures that we do not duplicate the code to create similar objects. 
-Similarly, the use of the observer pattern to notify subscribers of new delivery requests also avoids the duplication of code.
+Similarly, the use of the observer pattern to notify subscribers of new delivery requests also avoids the duplication of code. Re-usable methods can be called to update the delivery request information.
+For inheritance, the common attributes and methods are defined in the parent class, so that they can be re-used in every subclass. 
 
 ## Design Patterns
 The project uses the abstract factory pattern and observer pattern.

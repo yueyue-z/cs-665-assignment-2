@@ -3,7 +3,7 @@
  * Course: CS-665 Software Designs & Patterns
  * Date: 02/22/2023
  * File Name: DriverFactory.java
- * Description: This class is responsible for creating Driver objects.
+ * Description: This class is the abstract factory class of drivers.
  */
 
 package edu.bu.met.cs665.factory;
