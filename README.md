@@ -1,80 +1,83 @@
 
 | CS-665       | Software Design & Patterns |
 |--------------|----------------------------|
-| Name         | FIRST_NAME LAST_NAME       |
-| Date         | MM/DD/YYYY                 |
-| Course       | Fall / Spring / Summer     |
-| Assignment # |                            |
+| Name         | YUEYUE ZHU                 |
+| Date         | 02/22/2023                 |
+| Course       | Spring                     |
+| Assignment # | 2                          |
 
 # Assignment Overview
-Please add a paragraph or two overviewing the objectives of the assignment.
+This project aims to provide a comprehensive and flexible solution for a shop to send delivery requests to available drivers of different types, including van drivers, taxi drivers, and scooter drivers. 
+The project is designed to be robust and scalable, allowing easy creation of shops, delivery requests, and different types of drivers. By using the observer pattern and abstract factory patterns, this project provides the level of flexibility and scalability required for a growing business.
 
 # GitHub Repository Link:
-https://github.com/{YOUR_USERNAME}/cs-665-assignment-{ASSIGNMENT_NUMBER}
+https://github.com/yueyue-z/cs-665-assignment-2
 
 # Implementation Description 
+This project implements the functionality for a shop to send delivery requests to different types of freelance drivers, including van drivers, taxi drivers, and scooter drivers. The observer pattern and abstract factory patterns are used.
+
+The project's classes are organized into different packages according to their functionality:
+
+- The `factory` package includes a `DriverFactory` class as the abstract class. There are `ScooterDriverFactory`, `TaxiDriverFactory`, and `VanDriverFactory` classes, which inherit from this class, with the `createDriver` method overriding the abstract method in the parent class. With this approach, it is easy to customize each type of driver and the creation in the future without changing other code, which provides the level of flexibility and easy maintenance.
 
 
-For each assignment, please answer the following:
-
-- Explain the level of flexibility in your implementation, including how new object types can
-be easily added or removed in the future.
-- Discuss the simplicity and understandability of your implementation, ensuring that it is
-easy for others to read and maintain.
-- Describe how you have avoided duplicated code and why it is important.
-- If applicable, mention any design patterns you have used and explain why they were
-chosen.
+- The `request` package defines the `DeliveryRequest` class to represent a delivery request, containing the information of the shop and the customer's address.
 
 
-# Maven Commands
+- The `subject` package includes the `PublisherBase` interface, which serves as the subject/publisher in the observer pattern. It provides the methods for registering, removing, and notifying subscribers/observers (we use the name subscribers in the code for consistency and easy understanding). Then the `Shop` class implements the `PublisherBase` and represents the class of a shop object. It can generate delivery requests and notify its subscribers when a new delivery request is generated.
 
-We'll use Apache Maven to compile and run this project. You'll need to install Apache Maven (https://maven.apache.org/) on your system. 
 
-Apache Maven is a build automation tool and a project management tool for Java-based projects. Maven provides a standardized way to build, package, and deploy Java applications.
+- The `subscriber` package defines the `SubscriberBase` interface, which has the method to `updateSelf`. The `Driver` class implements the `SubscriberBase` interface, and it provides methods and attributes of the drivers. `ScooterDriver`, `TaxiDriver`, and `VanDriver` are the subclasses inheriting from the `Driver` class, which define different behaviors to `updateSelf` when a delivery request is sent. A driver will only accept the delivery requests if the driver is available.
 
-Maven uses a Project Object Model (POM) file to manage the build process and its dependencies. The POM file contains information about the project, such as its dependencies, the build configuration, and the plugins used for building and packaging the project.
 
-Maven provides a centralized repository for storing and accessing dependencies, which makes it easier to manage the dependencies of a project. It also provides a standardized way to build and deploy projects, which helps to ensure that builds are consistent and repeatable.
+- Lastly, the `Main` class is provided as the entry point to the project, which demonstrates a scenario.
 
-Maven also integrates with other development tools, such as IDEs and continuous integration systems, making it easier to use as part of a development workflow.
+## Flexibility
 
-Maven provides a large number of plugins for various tasks, such as compiling code, running tests, generating reports, and creating JAR files. This makes it a versatile tool that can be used for many different types of Java projects.
+The implementation of the project provides a high level of flexibility as new object types can be easily added or removed in the future. For example, new driver types can be added by creating a new factory class for that driver type, inheriting from the DriverFactory class, and overriding the createDriver method. Also, the methods of each subclass can be updated easily without changing the parent classes, which makes the project more maintainable.
+
+For the different driver types, they have their own updateSelf methods, which allows for further customization in the behavior and logic when receiving new delivery requests. Potential subscriber classes other than drivers, such as delivery personnel without a vehicle or administrative personnel, can also be created by implementing the SubscriberBase interface if there is a future need. This implementation allows for potential extension to the project's functionality while keeping the current structure and design patterns intact.
+
+## Simplicity and Understandability
+
+The implementation of the project is intentionally designed to be simple and easy to comprehend. The well-defined package structure and clearly defined class responsibilities make it easy to read and maintain the code. Furthermore, design patterns such as the observer pattern and the abstract factory pattern make the code more readable and understandable.
+
+Javadoc comments are available for all classes and methods in the project, and the class, variable, and method names are clearly indicative of their meanings, contributing to the code's readability. Additionally, the project uses consistent naming conventions for the Publisher and Subscriber classes, which could be named differently in other contexts, such as Subject/Object, for example. This consistency enhances the code's readability and aids in audience comprehension.
+
+## Avoiding Duplicated Code
+
+The project uses design patterns to avoid duplicated code. 
+For example, the use of the abstract factory pattern in creating different types of drivers ensures that we do not duplicate the code to create similar objects. 
+Similarly, the use of the observer pattern to notify subscribers of new delivery requests also avoids the duplication of code.
+
+## Design Patterns
+The project uses the abstract factory pattern and observer pattern.
+
+In abstract factory pattern, the `DriverFactory` is used as the abstract class which is inherited by three different types of driver factories. Each of them overrides the `createDriver` method and can create the specific type of driver object. Client can invoke the driver factories to create the driver objects needed.
+
+In the observer pattern, there are `PublisherBase` and `SubscriberBase` interfaces. `Shop` implements the `PublisherBase` to send `DeliveryRequest` to the subscribers, which are the drivers. So `Driver` implements the `SubscriberBase` and update themselves once received the notification. I added the logic for the driver to check if they are available as well, as the notification should only be sent to the available drivers. When using this pattern, clients need to create instances of shops and drivers, and register the drivers to the subscription list of the shop first. Whenever there is a new delivery request created, the shop can then notify everyone on the subscriber list.
+
+# Usage of the Program
+
+Users need to have JDK 1.8 and above installed to run this program.
+A sample scenario is provided in the Main class.
 
 ## Compile
-Type on the command line: 
+To compile the project, the user may type on the command line: 
 
 ```bash
 mvn clean compile
 ```
 
-
-
 ## JUnit Tests
-JUnit is a popular testing framework for Java. JUnit tests are automated tests that are written to verify that the behavior of a piece of code is as expected.
-
-In JUnit, tests are written as methods within a test class. Each test method tests a specific aspect of the code and is annotated with the @Test annotation. JUnit provides a range of assertions that can be used to verify the behavior of the code being tested.
-
-JUnit tests are executed automatically and the results of the tests are reported. This allows developers to quickly and easily check if their code is working as expected, and make any necessary changes to fix any issues that are found.
-
-The use of JUnit tests is an important part of Test-Driven Development (TDD), where tests are written before the code they are testing is written. This helps to ensure that the code is written in a way that is easily testable and that all required functionality is covered by tests.
-
-JUnit tests can be run as part of a continuous integration pipeline, where tests are automatically run every time changes are made to the code. This helps to catch any issues as soon as they are introduced, reducing the need for manual testing and making it easier to ensure that the code is always in a releasable state.
+The `TestDriverFactory` class tests the functionality of creating drivers of each type with the abstract factory pattern. We also have `TestShop` class to test the functions to create a shop, create 5 drivers, register them to the shop as subscribers, and the shop sends a delivery request to them.
 
 To run, use the following command:
 ```bash
 mvn clean test
 ```
 
-
 ## Spotbugs 
-
-SpotBugs is a static code analysis tool for Java that detects potential bugs in your code. It is an open-source tool that can be used as a standalone application or integrated into development tools such as Eclipse, IntelliJ, and Gradle.
-
-SpotBugs performs an analysis of the bytecode generated from your Java source code and reports on any potential problems or issues that it finds. This includes things like null pointer exceptions, resource leaks, misused collections, and other common bugs.
-
-The tool uses data flow analysis to examine the behavior of the code and detect issues that might not be immediately obvious from just reading the source code. SpotBugs is able to identify a wide range of issues and can be customized to meet the needs of your specific project.
-
-Using SpotBugs can help to improve the quality and reliability of your code by catching potential bugs early in the development process. This can save time and effort in the long run by reducing the need for debugging and fixing issues later in the development cycle. SpotBugs can also help to ensure that your code is secure by identifying potential security vulnerabilities.
 
 Use the following command:
 
@@ -82,30 +85,13 @@ Use the following command:
 mvn spotbugs:gui 
 ```
 
-For more info see 
-https://spotbugs.readthedocs.io/en/latest/maven.html
-
-SpotBugs https://spotbugs.github.io/ is the spiritual successor of FindBugs.
-
-
 ## Checkstyle 
-
-Checkstyle is a development tool for checking Java source code against a set of coding standards. It is an open-source tool that can be integrated into various integrated development environments (IDEs), such as Eclipse and IntelliJ, as well as build tools like Maven and Gradle.
-
-Checkstyle performs static code analysis, which means it examines the source code without executing it, and reports on any issues or violations of the coding standards defined in its configuration. This includes issues like code style, code indentation, naming conventions, code structure, and many others.
-
-By using Checkstyle, developers can ensure that their code adheres to a consistent style and follows best practices, making it easier for other developers to read and maintain. It can also help to identify potential issues before the code is actually run, reducing the risk of runtime errors or unexpected behavior.
-
-Checkstyle is highly configurable and can be customized to fit the needs of your team or organization. It supports a wide range of coding standards and can be integrated with other tools, such as code coverage and automated testing tools, to create a comprehensive and automated software development process.
-
-The following command will generate a report in HTML format that you can open in a web browser. 
 
 ```bash
 mvn checkstyle:checkstyle
 ```
 
-The HTML page will be found at the following location:
-`target/site/checkstyle.html`
+
 
 
 
